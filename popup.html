@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vigilix</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 280px;
+      margin: 0;
+      padding: 15px;
+      background-color: #fff8b5;
+      color: #333;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #ff4d4d;
+      text-align: center;
+    }
+    p {
+      font-size: 14px;
+      margin: 8px 0;
+      text-align: center;
+    }
+    #url {
+      font-weight: bold;
+      word-break: break-all;
+      background: #fff3cd;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ffeeba;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vigilix</h1>
+  <p>Protecting you from suspicious login pages.</p>
+  <p>Current URL:</p>
+  <div id="url">Loading...</div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if(tabs.length > 0) {
+          const url = tabs[0].url || 'Unknown';
+          document.getElementById('url').textContent = url;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
