@@ -26,7 +26,7 @@
       if (isSuspicious) {
         const warning = document.createElement('div');
         warning.innerHTML = `
-          🚨 <strong>Vigilix Alert:</strong> This page looks suspicious.Proceed with caution!
+          🚨 <strong>Vigilix Alert:</strong> This page looks suspicious. Proceed with caution!
         `;
 
         Object.assign(warning.style, {
@@ -46,7 +46,7 @@
         });
 
         const closeBtn = document.createElement('span');
-        closeBtn.innerText = '';
+        closeBtn.innerText = ' ✖';
         Object.assign(closeBtn.style, {
           marginLeft: '15px',
           cursor: 'pointer'
@@ -58,9 +58,9 @@
       }
 
       // 🟡 Status badge (corner)
-      const testDiv = document.createElement('div');
-      testDiv.innerText = "🛡️ Vigilix is active";
-      Object.assign(testDiv.style, {
+      const statusBadge = document.createElement('div');
+      statusBadge.innerText = "🛡️ Vigilix is active";
+      Object.assign(statusBadge.style, {
         position: 'fixed',
         bottom: '20px',
         left: '20px',
@@ -74,7 +74,7 @@
         fontFamily: 'Arial, sans-serif',
         zIndex: 999999
       });
-      document.body.appendChild(testDiv);
+      document.body.appendChild(statusBadge);
 
     } catch (err) {
       console.error("❌ Vigilix error:", err);
@@ -123,6 +123,71 @@
       bar.appendChild(closeBtn);
       document.body.appendChild(bar);
     }
+
+    if (message.type === 'blockDownload') {
+      // Create a warning banner
+      const banner = document.createElement('div');
+      banner.style.position = 'fixed';
+      banner.style.top = '0';
+      banner.style.left = '0';
+      banner.style.width = '100%';
+      banner.style.backgroundColor = '#ff4d4d';
+      banner.style.color = '#fff';
+      banner.style.textAlign = 'center';
+      banner.style.padding = '10px';
+      banner.style.zIndex = '10000';
+      banner.textContent = `Auto-download blocked: ${message.url}. Please leave this page if you don't trust it.`;
+
+      // Append the banner to the page
+      document.body.appendChild(banner);
+
+      // Remove the banner after 10 seconds
+      setTimeout(() => {
+        banner.remove();
+      }, 10000);
+    }
   });
 
+  // Block auto-downloads triggered by JavaScript
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+
+    // Check if the clicked element is a download link
+    if (target.tagName === 'A' && target.hasAttribute('download')) {
+      const href = target.getAttribute('href');
+
+      // Block `data:` URLs
+      if (href.startsWith('data:')) {
+        console.warn('Blocked auto-download of data URL:', href);
+        event.preventDefault();
+        alert('Auto-download blocked: This page attempted to download a file automatically.');
+      }
+    }
+  });
+
+  // Optionally, block the creation of download links dynamically
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.tagName === 'A' && node.hasAttribute('download')) {
+          const href = node.getAttribute('href');
+          if (href && href.startsWith('data:')) {
+            console.warn('Blocked creation of download link:', href);
+            node.remove();
+          }
+        }
+      });
+    });
+  });
+
+  // Observe the entire document for changes
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  } else {
+    window.addEventListener("DOMContentLoaded", () => {
+      if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+    });
+  }
 })();
