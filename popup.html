@@ -8,15 +8,16 @@
       font-family: Arial, sans-serif;
       width: 280px;
       margin: 0;
-      padding: 15px;
-      background-color: #fff8b5;
-      color: #333;
+      padding: 10px;
     }
     h1 {
       font-size: 22px;
       margin-bottom: 10px;
       color: #ff4d4d;
       text-align: center;
+    }
+    h3 {
+      margin-top: 0;
     }
     p {
       font-size: 14px;
@@ -33,6 +34,28 @@
       margin-top: 10px;
       text-align: center;
     }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 5px;
+    }
+    #cookies-list {
+      display: none; /* Initially hidden */
+    }
+    #view-all-btn {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #view-all-btn:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -40,16 +63,10 @@
   <p>Protecting you from suspicious login pages.</p>
   <p>Current URL:</p>
   <div id="url">Loading...</div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if(tabs.length > 0) {
-          const url = tabs[0].url || 'Unknown';
-          document.getElementById('url').textContent = url;
-        }
-      });
-    });
-  </script>
+  <h3>Cookies Summary:</h3>
+  <ul id="cookies-summary"></ul>
+  <button id="view-all-btn">View All</button>
+  <ul id="cookies-list"></ul>
+  <script src="popup.js"></script>
 </body>
 </html>
