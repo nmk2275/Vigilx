@@ -14,7 +14,50 @@
     "https://*/*"
   ],
   "background": {
+    "service_worker": "background.js"{
+  "manifest_version": 3,
+  "name": "Vigilix",
+  "version": "1.2",
+  "description": "Warns users about potentially suspicious login pages and blocks auto-downloads.",
+  "permissions": [
+    "cookies",
+    "tabs",
+    "scripting",
+    "downloads",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*",
+    "<all_urls>"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "block_downloads",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["file://*/*", "http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
+
   },
   "action": {
     "default_popup": "popup.html"
