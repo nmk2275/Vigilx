@@ -1,22 +1,6 @@
 {
   "manifest_version": 3,
   "name": "Vigilix",
-  "version": "1.0",
-  "description": "Warns users about potentially suspicious login pages.",
-  "permissions": [
-"tabs",
-"scripting",
-"downloads"
-],
-
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
-  "background": {
-    "service_worker": "background.js"{
-  "manifest_version": 3,
-  "name": "Vigilix",
   "version": "1.2",
   "description": "Warns users about potentially suspicious login pages and blocks auto-downloads.",
   "permissions": [
@@ -56,17 +40,4 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   }
-}
-
-  },
-  "action": {
-    "default_popup": "popup.html"
-  },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["content.js"],
-      "run_at": "document_idle"
-    }
-  ]
 }
